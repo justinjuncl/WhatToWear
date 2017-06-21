@@ -1,0 +1,23 @@
+{
+  "name": "what-to-wear",
+  "version": "1.0.0",
+  "description": "wit.ai project",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinjuncl/WhatToWear.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justinjuncl/WhatToWear/issues"
+  },
+  "homepage": "https://github.com/justinjuncl/WhatToWear#readme",
+  "dependencies": {
+    "node-wit": "^4.2.0"
+  }
+}
