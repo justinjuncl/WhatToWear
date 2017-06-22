@@ -3,10 +3,10 @@
 let Wit = require('node-wit').Wit;
 let interactive = require('node-wit').interactive;
 
-const accessToken = '5RKXBBAR7JJ32XCRNO6WTYWCGTWOQH4D';
+const accessToken = 'N5Z57AGCO7ZCDPLBITQL7Z3TFYZ67HND';
+const maxSteps = 10;
 
-var getJSON = function (location) {
-  var url = 'https://restcountries.eu/rest/v2/name/' + location;
+var getJSON = function (url) {
   return fetch(url, {
     method: 'GET',
     headers: {
@@ -42,24 +42,38 @@ const actions = {
   send(request, response) {
     const {sessionId, context, entities} = request;
     const {text, quickreplies} = response;
-    console.log('sending...', JSON.stringify(response));
+    console.log('Bot: ', text);
   },
-  getCapital({context, entities}) {
+  getDateTime({context, entities}) {
+    return new Promise(function(resolve, reject) {
+      context.datetime = firstEntityValue(entities, 'datetime');
+      return resolve(context);
+    });
+  },
+  getGender({context, entities}) {
+    return new Promise(function(resolve, reject) {
+      context.gender = firstEntityValue(entities, 'gender');
+      return resolve(context);
+    });
+  },
+  getClothes({context, entities}) {
+    console.log('entities', entities)
+    console.log('context', context)
+    var gender = context.gender;
     var location = firstEntityValue(entities, 'location');
-    if (location) {
-      return new Promise(function (resolve, reject) {
-        return getJSON(location).then(jsonData => {
-          context.capital = jsonData[0].capital;
-          delete context.missingLocation;
-          return resolve(context);
-        })
-      });
-    } else {
-      context.missingLocation = true;
-      delete context.capital;
-      return Promise.reject(context);
-    }
-    return context;
+
+    return new Promise(function (resolve, reject) {
+      let url = 'http://api.openweathermap.org/data/2.5/weather?q=' + location + '&appid=ff14898593d8b6c0b8e271199189269d'
+      return getJSON(url).then(jsonData => {
+        context.top = '___';
+        context.bottom = '___';
+        context.shoes = '___';
+        context.extra = '___';
+        context.weather = jsonData.weather[0].description;
+        context.location = jsonData.name;
+        return resolve(context);
+      })
+    });
   },
 };
 
